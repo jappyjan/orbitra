@@ -10,7 +10,7 @@
     "test": "jest",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "build:web": "npx expo export --platform web"
+    "build:web": "npx expo export --platform web && node scripts/fix-cloudflare-assets.js"
   },
   "jest": {
     "preset": "jest-expo"
