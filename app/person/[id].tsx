@@ -1,4 +1,5 @@
-import { StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, ScrollView, Pressable, Alert, TextInput } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Text, View } from '@/components/Themed';
@@ -16,8 +17,12 @@ export default function PersonDetailScreen() {
   const colors = Colors[colorScheme ?? 'light'];
   const person = usePersonStore((s) => s.getPerson(id));
   const deletePerson = usePersonStore((s) => s.deletePerson);
+  const updatePerson = usePersonStore((s) => s.updatePerson);
+  const removeConnection = usePersonStore((s) => s.removeConnection);
   const getPerson = usePersonStore((s) => s.getPerson);
   const getCircle = useCircleStore((s) => s.getCircle);
+  const [newTag, setNewTag] = useState('');
+  const [showTagInput, setShowTagInput] = useState(false);
 
   if (!person) {
     return (
@@ -40,6 +45,40 @@ export default function PersonDetailScreen() {
             deletePerson(id);
             router.back();
           },
+        },
+      ]
+    );
+  };
+
+  const handleAddTag = () => {
+    const tag = newTag.trim();
+    if (!tag) return;
+    if (person.tags.includes(tag)) {
+      setNewTag('');
+      setShowTagInput(false);
+      return;
+    }
+    updatePerson(id, { tags: [...person.tags, tag] });
+    setNewTag('');
+    setShowTagInput(false);
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    updatePerson(id, { tags: person.tags.filter((t) => t !== tag) });
+  };
+
+  const handleRemoveConnection = (connId: string) => {
+    const conn = getPerson(connId);
+    if (!conn) return;
+    Alert.alert(
+      'Remove Connection',
+      `Remove connection with ${getFullName(conn)}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => removeConnection(id, connId),
         },
       ]
     );
@@ -128,42 +167,83 @@ export default function PersonDetailScreen() {
       ) : null}
 
       {/* Tags */}
-      {person.tags.length > 0 && (
-        <View style={[styles.section, { borderColor: colors.separator }]}>
+      <View style={[styles.section, { borderColor: colors.separator }]}>
+        <View style={styles.sectionHeader} lightColor="transparent" darkColor="transparent">
           <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Tags</Text>
-          <View style={styles.tagRow} lightColor="transparent" darkColor="transparent">
-            {person.tags.map((tag) => (
-              <View
-                key={tag}
-                style={[styles.tag, { backgroundColor: colors.backgroundSecondary }]}
-                lightColor={colors.backgroundSecondary}
-                darkColor={colors.backgroundSecondary}
-              >
-                <Text style={[styles.tagText, { color: colors.textSecondary }]}>{tag}</Text>
-              </View>
-            ))}
-          </View>
+          <Pressable onPress={() => setShowTagInput(!showTagInput)}>
+            <FontAwesome name={showTagInput ? 'times' : 'plus'} size={14} color={colors.tint} />
+          </Pressable>
         </View>
-      )}
+        <View style={styles.tagRow} lightColor="transparent" darkColor="transparent">
+          {person.tags.map((tag) => (
+            <Pressable
+              key={tag}
+              onPress={() => handleRemoveTag(tag)}
+              style={[styles.tag, { backgroundColor: colors.backgroundSecondary }]}
+            >
+              <Text style={[styles.tagText, { color: colors.textSecondary }]}>{tag}</Text>
+              <FontAwesome name="times" size={10} color={colors.textSecondary} style={styles.tagRemove} />
+            </Pressable>
+          ))}
+        </View>
+        {showTagInput && (
+          <View style={styles.tagInputRow} lightColor="transparent" darkColor="transparent">
+            <TextInput
+              style={[
+                styles.tagInput,
+                {
+                  backgroundColor: colors.backgroundSecondary,
+                  color: colors.text,
+                  borderColor: colors.cardBorder,
+                },
+              ]}
+              placeholder="Enter tag..."
+              placeholderTextColor={colors.placeholder}
+              value={newTag}
+              onChangeText={setNewTag}
+              onSubmitEditing={handleAddTag}
+              autoCapitalize="none"
+              autoFocus
+              returnKeyType="done"
+            />
+            <Pressable onPress={handleAddTag} style={[styles.tagAddButton, { backgroundColor: colors.tint }]}>
+              <Text style={styles.tagAddText}>Add</Text>
+            </Pressable>
+          </View>
+        )}
+        {person.tags.length === 0 && !showTagInput && (
+          <Text style={[styles.emptyHint, { color: colors.placeholder }]}>
+            Tap + to add tags
+          </Text>
+        )}
+      </View>
 
       {/* Connections */}
       {connections.length > 0 && (
         <View style={[styles.section, { borderColor: colors.separator }]}>
           <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Connections</Text>
           {connections.map((conn) => (
-            <Pressable
-              key={conn!.id}
-              style={styles.connectionRow}
-              onPress={() => router.push(`/person/${conn!.id}`)}
-            >
-              <AvatarCircle
-                photoUri={conn!.photoUri}
-                initials={getInitials(conn!)}
-                size={36}
-              />
-              <Text style={styles.connectionName}>{getFullName(conn!)}</Text>
-              <FontAwesome name="chevron-right" size={12} color={colors.textSecondary} />
-            </Pressable>
+            <View key={conn!.id} style={styles.connectionRow} lightColor="transparent" darkColor="transparent">
+              <Pressable
+                style={styles.connectionInfo}
+                onPress={() => router.push(`/person/${conn!.id}`)}
+              >
+                <AvatarCircle
+                  photoUri={conn!.photoUri}
+                  initials={getInitials(conn!)}
+                  size={36}
+                />
+                <Text style={styles.connectionName}>{getFullName(conn!)}</Text>
+                <FontAwesome name="chevron-right" size={12} color={colors.textSecondary} />
+              </Pressable>
+              <Pressable
+                onPress={() => handleRemoveConnection(conn!.id)}
+                style={styles.removeConnectionButton}
+                hitSlop={8}
+              >
+                <FontAwesome name="unlink" size={14} color={colors.danger} />
+              </Pressable>
+            </View>
           ))}
         </View>
       )}
@@ -238,12 +318,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   tagRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 6,
   },
   tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 10,
@@ -251,15 +338,54 @@ const styles = StyleSheet.create({
   tagText: {
     fontSize: 13,
   },
+  tagRemove: {
+    marginLeft: 6,
+  },
+  tagInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+  },
+  tagInput: {
+    flex: 1,
+    height: 36,
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    fontSize: 14,
+  },
+  tagAddButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  tagAddText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  emptyHint: {
+    fontSize: 13,
+    fontStyle: 'italic',
+  },
   connectionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
     paddingVertical: 6,
+  },
+  connectionInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   connectionName: {
     flex: 1,
     fontSize: 16,
+  },
+  removeConnectionButton: {
+    paddingLeft: 12,
   },
   deleteButton: {
     alignItems: 'center',

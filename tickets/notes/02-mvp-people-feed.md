@@ -5,7 +5,7 @@
 
 The primary mobile view. A vertically scrolling card-based feed optimized for one-thumb use. This is what users see when they open the app. In MVP, it surfaces people sorted alphabetically and by recency of addition.
 
-> **Implementation Status:** Core feed is implemented with search, sort, cards, and empty state. Missing: filter by circle, pull-to-refresh, swipe/long-press card actions, and navigate-to-canvas from search.
+> **Implementation Status:** Core feed is implemented with search, sort, cards, empty state, filter by circle, and pull-to-refresh. Missing: swipe/long-press card actions, and navigate-to-canvas from search.
 
 ## Tasks
 
@@ -20,8 +20,8 @@ The primary mobile view. A vertically scrolling card-based feed optimized for on
 
 - [x] Sort by alphabetical order (default)
 - [x] Sort by recency of addition
-- [ ] Filter by circle/category
-- [ ] Implement pull-to-refresh
+- [x] Filter by circle/category
+- [x] Implement pull-to-refresh
 
 ### Card Interactions
 

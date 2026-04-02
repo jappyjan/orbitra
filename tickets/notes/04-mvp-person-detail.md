@@ -5,7 +5,7 @@
 
 Opened as a full-screen modal (bottom sheet on phone). Designed for quick scanning and editing.
 
-> **Implementation Status:** Person detail view is implemented as a full-screen page (not bottom sheet modal). Shows header, contact info, notes, tags, connections, and delete. Edit screen works. Missing: bottom-sheet presentation, add/remove tags UI, rich text notes, add connection from detail view, and remove connection UI.
+> **Implementation Status:** Person detail view is implemented as a full-screen page (not bottom sheet modal). Shows header, contact info, notes, tags (with add/remove), connections (with remove), and delete. Edit screen works. Missing: bottom-sheet presentation, rich text notes, and add connection from detail view.
 
 ## Tasks
 
@@ -30,7 +30,7 @@ Opened as a full-screen modal (bottom sheet on phone). Designed for quick scanni
 ### Edit Functionality
 
 - [x] Edit person name, photo, contact info
-- [ ] Add/remove tags
+- [x] Add/remove tags
 - [ ] Edit notes with basic text formatting
 - [x] Change circle/category assignment
 - [x] Save changes with validation
@@ -40,7 +40,7 @@ Opened as a full-screen modal (bottom sheet on phone). Designed for quick scanni
 - [x] Display list of connected people
 - [x] Tap a connection to navigate to their detail view
 - [ ] Add new connection from detail view (link to another person)
-- [ ] Remove a connection
+- [x] Remove a connection
 
 ### Delete Person
 
