@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { View } from '@/components/Themed';
@@ -7,7 +8,8 @@ import { usePersonStore } from '@/stores/usePersonStore';
 
 export default function CirclesScreen() {
   const router = useRouter();
-  const circles = useCircleStore((s) => s.getAllCircles());
+  const circlesRecord = useCircleStore((s) => s.circles);
+  const circles = useMemo(() => Object.values(circlesRecord), [circlesRecord]);
   const getPeopleByCircle = usePersonStore((s) => s.getPeopleByCircle);
 
   return (

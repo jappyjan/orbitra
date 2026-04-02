@@ -19,7 +19,8 @@ export default function PeopleFeedScreen() {
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const people = usePersonStore((s) => s.getAllPeople());
+  const peopleRecord = usePersonStore((s) => s.people);
+  const people = useMemo(() => Object.values(peopleRecord), [peopleRecord]);
 
   const filteredAndSorted = useMemo(() => {
     let result = people;

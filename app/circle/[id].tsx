@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { StyleSheet, FlatList, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -15,7 +16,11 @@ export default function CircleDetailScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const circle = useCircleStore((s) => s.getCircle(id));
-  const members = usePersonStore((s) => s.getPeopleByCircle(id));
+  const peopleRecord = usePersonStore((s) => s.people);
+  const members = useMemo(
+    () => Object.values(peopleRecord).filter((p) => p.circleIds.includes(id)),
+    [peopleRecord, id]
+  );
 
   if (!circle) {
     return (
