@@ -2,14 +2,16 @@
 
 **Phase:** All phases
 
+> **Implementation Status (MVP scope):** Tab navigation with 3 tabs (Home/Explore/Circles) is implemented. Floating "+" button works. No profile/settings, no onboarding flow, no tablet layout.
+
 ## Mobile Navigation (Phone)
 
-- [ ] Bottom tab bar with 4 primary destinations:
-  - [ ] Home (People Feed)
-  - [ ] Explore (Graph Canvas)
-  - [ ] Circles (Circle Groups)
+- [x] Bottom tab bar with primary destinations:
+  - [x] Home (People Feed)
+  - [x] Explore (Graph Canvas) — *placeholder only, no graph*
+  - [x] Circles (Circle Groups)
   - [ ] Timeline (History) — v1.0
-- [ ] Floating "+" action button for quick-add person (always accessible)
+- [x] Floating "+" action button for quick-add person (always accessible)
 - [ ] Profile/settings via avatar tap in top-left corner
 - [ ] Follow iOS/Android navigation conventions per platform
 

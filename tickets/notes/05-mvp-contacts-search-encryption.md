@@ -3,6 +3,8 @@
 **Phase:** MVP (Q2 2026)
 **Platform:** iOS (iPhone) only
 
+> **Implementation Status:** Basic search is implemented (name + tag matching). No contact import, no fuzzy search, no encryption. Local storage uses plain-text AsyncStorage (not encrypted).
+
 ## Contact Book Import
 
 - [ ] Integrate native iOS contact picker (CNContactPickerViewController)
@@ -14,10 +16,10 @@
 
 ## Search
 
-- [ ] Implement fuzzy search by name
-- [ ] Search by tags
-- [ ] Show results as a filtered list with avatar + name
-- [ ] Tap result to navigate to person on canvas or open detail view
+- [x] Search by tags
+- [x] Show results as a filtered list with avatar + name
+- [x] Tap result to navigate to person on canvas or open detail view — *opens detail view only, no canvas navigation*
+- [ ] Implement fuzzy search by name — *current search is substring match, not fuzzy*
 - [ ] Search should be fast and responsive (<100ms for up to 500 people)
 
 ## End-to-End Encryption
@@ -31,8 +33,9 @@
 
 ## Local Storage
 
-- [ ] Design encrypted local data schema (SQLite or Core Data with encrypted fields)
+- [x] Store person records and metadata — *using AsyncStorage with Zustand persist*
+- [x] No server, no account, no sync — all data stays on-device
+- [x] Zero infrastructure cost for MVP
+- [ ] Design encrypted local data schema (SQLite or Core Data with encrypted fields) — *using plain AsyncStorage, not encrypted*
 - [ ] Store encrypted person records, edges, and metadata
 - [ ] Implement data migration strategy for schema changes
-- [ ] No server, no account, no sync — all data stays on-device
-- [ ] Zero infrastructure cost for MVP
