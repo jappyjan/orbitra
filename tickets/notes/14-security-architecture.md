@@ -4,7 +4,7 @@
 
 Security is a core product pillar. All personal data is encrypted on the device before transmission. The server stores only ciphertext.
 
-> **Implementation Status:** MVP encryption is implemented. AES-256-GCM via react-native-quick-crypto (native) and Web Crypto API (web). PBKDF2 key derivation (600k iterations). Key stored in expo-secure-store (iOS Keychain / Android KeyStore). Passphrase setup + biometric unlock flow.
+> **Implementation Status:** MVP encryption is implemented. AES-256-GCM via react-native-quick-crypto (native) and Web Crypto API (web). PBKDF2 key derivation (600k iterations). Key stored in expo-secure-store (iOS Keychain / Android KeyStore), sessionStorage on web. Passphrase setup + biometric unlock flow. Crypto modules are platform-split (`*.web.ts` / `*.ts`) so Metro never bundles native modules into the web build. Pre-commit hooks (husky + lint-staged) enforce typecheck, lint, test, and web build on every commit.
 
 ## Encryption (MVP)
 
