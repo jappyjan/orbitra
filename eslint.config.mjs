@@ -3,7 +3,7 @@ import expoConfig from "eslint-config-expo/flat.js";
 export default [
   ...expoConfig,
   {
-    ignores: ["dist/", ".expo/", "node_modules/"],
+    ignores: ["dist/", ".expo/", "node_modules/", "scripts/"],
   },
   {
     files: ["**/__tests__/**/*.{js,ts,jsx,tsx}"],
