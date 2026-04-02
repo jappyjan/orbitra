@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { StyleSheet, TextInput, ScrollView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -16,7 +16,8 @@ export default function EditPersonScreen() {
   const colors = Colors[colorScheme ?? 'light'];
   const person = usePersonStore((s) => s.getPerson(id));
   const updatePerson = usePersonStore((s) => s.updatePerson);
-  const circles = useCircleStore((s) => s.getAllCircles());
+  const circlesRecord = useCircleStore((s) => s.circles);
+  const circles = useMemo(() => Object.values(circlesRecord), [circlesRecord]);
 
   const [firstName, setFirstName] = useState(person?.firstName ?? '');
   const [lastName, setLastName] = useState(person?.lastName ?? '');
