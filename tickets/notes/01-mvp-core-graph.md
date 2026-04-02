@@ -5,6 +5,8 @@
 
 The signature Orbitra experience: an interactive, zoomable graph where people are nodes and relationships are edges. On phones, the canvas is optimized for touch with larger tap targets, simplified labels, and a focus-mode that expands a selected node's neighborhood.
 
+> **Implementation Status:** The Explore tab exists but only shows a placeholder ("Interactive relationship graph coming soon"). No graph engine, touch interactions, or focus mode have been implemented.
+
 ## Tasks
 
 ### Graph Rendering Engine

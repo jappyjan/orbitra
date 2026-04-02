@@ -2,14 +2,19 @@
 
 **Phase:** All phases
 
+> **Implementation Status (MVP scope):** Tab navigation with 3 tabs (Home/Explore/Circles) is implemented. Floating "+" button works. Passphrase setup and unlock screen implemented (auth-gated navigation via `useSegments`/`useRouter` redirect). No profile/settings, no onboarding carousel, no tablet layout. Web output uses SPA mode (`"output": "single"`) due to native module incompatibility with Node.js static rendering.
+
 ## Mobile Navigation (Phone)
 
-- [ ] Bottom tab bar with 4 primary destinations:
-  - [ ] Home (People Feed)
-  - [ ] Explore (Graph Canvas)
-  - [ ] Circles (Circle Groups)
+- [x] Bottom tab bar with primary destinations:
+  - [x] Home (People Feed)
+  - [x] Explore (Graph Canvas) — *placeholder only, no graph*
+  - [x] Circles (Circle Groups)
   - [ ] Timeline (History) — v1.0
-- [ ] Floating "+" action button for quick-add person (always accessible)
+- [x] Floating "+" action button for quick-add person (always accessible)
+- [x] Passphrase setup screen on first launch (encryption onboarding)
+- [x] Unlock screen with passphrase entry + biometric option
+- [x] Auth-gated navigation (redirect to unlock when locked)
 - [ ] Profile/settings via avatar tap in top-left corner
 - [ ] Follow iOS/Android navigation conventions per platform
 
