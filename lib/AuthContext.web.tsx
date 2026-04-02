@@ -1,6 +1,5 @@
-// Native-only AuthContext (iOS/Android). Metro resolves AuthContext.web.tsx for web.
+// Web-only AuthContext: no biometric support, no expo-local-authentication.
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
-import * as LocalAuth from 'expo-local-authentication';
 import * as keyManager from './keyManager';
 import { usePersonStore } from '@/stores/usePersonStore';
 
@@ -25,18 +24,9 @@ export function useAuth(): AuthContextValue {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>('loading');
-  const [biometricAvailable, setBiometricAvailable] = useState(false);
 
   useEffect(() => {
     (async () => {
-      try {
-        const compatible = await LocalAuth.hasHardwareAsync();
-        const enrolled = compatible && (await LocalAuth.isEnrolledAsync());
-        setBiometricAvailable(enrolled);
-      } catch {
-        setBiometricAvailable(false);
-      }
-
       const hasSetup = await keyManager.isSetup();
       if (!hasSetup) {
         setStatus('needs-setup');
@@ -66,21 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const unlockWithBiometric = useCallback(async () => {
-    const result = await LocalAuth.authenticateAsync({
-      promptMessage: 'Unlock Orbitra',
-      fallbackLabel: 'Use Passphrase',
-      disableDeviceFallback: true,
-    });
-
-    if (!result.success) {
-      throw new Error('Biometric authentication failed');
-    }
-
-    const key = await keyManager.unlockWithStoredKey();
-    if (!key) throw new Error('No stored key found. Please enter your passphrase.');
-
-    await usePersonStore.persist.rehydrate();
-    setStatus('unlocked');
+    throw new Error('Biometric not available on web');
   }, []);
 
   const lock = useCallback(() => {
@@ -90,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ status, setup, unlockWithPassphrase, unlockWithBiometric, lock, biometricAvailable }}
+      value={{ status, setup, unlockWithPassphrase, unlockWithBiometric, lock, biometricAvailable: false }}
     >
       {children}
     </AuthContext.Provider>
