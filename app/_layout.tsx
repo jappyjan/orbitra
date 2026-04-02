@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { AuthProvider, useAuth } from '@/lib/AuthContext';
 
 export {
   ErrorBoundary,
@@ -28,42 +29,59 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   if (!loaded) {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
+  );
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { status } = useAuth();
+
+  useEffect(() => {
+    if (status !== 'loading') {
+      SplashScreen.hideAsync();
+    }
+  }, [status]);
+
+  if (status === 'loading') {
+    return null;
+  }
+
+  const isUnlocked = status === 'unlocked';
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="person/[id]"
-          options={{ presentation: 'modal', title: 'Person' }}
-        />
-        <Stack.Screen
-          name="person/add"
-          options={{ presentation: 'modal', title: 'Add Person' }}
-        />
-        <Stack.Screen
-          name="person/edit/[id]"
-          options={{ presentation: 'modal', title: 'Edit Person' }}
-        />
-        <Stack.Screen
-          name="circle/[id]"
-          options={{ title: 'Circle' }}
-        />
+        {isUnlocked ? (
+          <>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="person/[id]"
+              options={{ presentation: 'modal', title: 'Person' }}
+            />
+            <Stack.Screen
+              name="person/add"
+              options={{ presentation: 'modal', title: 'Add Person' }}
+            />
+            <Stack.Screen
+              name="person/edit/[id]"
+              options={{ presentation: 'modal', title: 'Edit Person' }}
+            />
+            <Stack.Screen
+              name="circle/[id]"
+              options={{ title: 'Circle' }}
+            />
+          </>
+        ) : (
+          <Stack.Screen name="unlock" options={{ headerShown: false }} />
+        )}
       </Stack>
     </ThemeProvider>
   );

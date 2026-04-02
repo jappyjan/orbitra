@@ -8,6 +8,14 @@ module.exports = function (api) {
       // import.meta is a syntax error in that context. Zustand's devtools
       // middleware references import.meta.env.MODE at build time.
       importMetaEnvPlugin,
+      [
+        'module-resolver',
+        {
+          alias: {
+            crypto: 'react-native-quick-crypto',
+          },
+        },
+      ],
     ],
   };
 };

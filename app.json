@@ -30,7 +30,11 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      ["react-native-quick-crypto"],
+      ["expo-local-authentication", {
+        "faceIDPermission": "Orbitra uses Face ID to unlock your encrypted data."
+      }]
     ],
     "experiments": {
       "typedRoutes": true

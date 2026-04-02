@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import { Person, PersonCreate, getFullName } from '@/models/Person';
 import { OTHER_CIRCLE_ID } from '@/constants/CircleDefaults';
+import { encryptedStorage } from '@/lib/encryptedStorage';
 
 interface PersonState {
   people: Record<string, Person>;
@@ -152,7 +152,8 @@ export const usePersonStore = create<PersonState>()(
     }),
     {
       name: 'orbitra-people',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => encryptedStorage),
+      skipHydration: true,
     }
   )
 );
